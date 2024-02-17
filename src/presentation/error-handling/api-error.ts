@@ -89,10 +89,6 @@ class ApiError extends ErrorClass {
   static emailExits(): ApiError {
     return new ApiError(HttpStatus.CONFLICT, ErrorMessage.EMAIL_CONFLICT, "email_conflict");
   }
-
-  static nameExits(): ApiError {
-    return new ApiError(HttpStatus.CONFLICT, ErrorMessage.TRAVEL_NAME_CONFLICT, "name_conflict");
-  }
 }
 
 export default ApiError;

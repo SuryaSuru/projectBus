@@ -84,8 +84,14 @@ class ApiError extends ErrorClass {
     );
   }
 
+
+  //OWN ERROR
   static emailExits(): ApiError {
     return new ApiError(HttpStatus.CONFLICT, ErrorMessage.EMAIL_CONFLICT, "email_conflict");
+  }
+
+  static contactInfoExits(): ApiError {
+    return new ApiError(HttpStatus.CONFLICT, ErrorMessage.CONTACT_INFO_CONFLICT, "contactInfo_conflict");
   }
 }
 

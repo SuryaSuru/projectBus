@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import ApiError from "@presentation/error-handling/api-error";
-import { GuestModel } from "@domain/guest/entities/guest";
-import { Guest } from "../models/guest-model";
+import { TravelModel } from "@domain/travel/entities/travel";
+import { Travel } from "../models/travel-model";
 import msg91 from "msg91";
 
 const msg91authkey = process.env.SENDER_AUTH;
@@ -11,12 +11,12 @@ const msg91route = process.env.SENDER_ROUTE; // Route number 4 represents Transa
 // Initialize msg91
 const msg91sms = msg91(msg91authkey, msg91sender, msg91route);
 
-export interface GuestDataSource {
-  create(guest: GuestModel): Promise<any>; // Return type should be Promise of GuestEntity
-  update(id: string, guest: GuestModel): Promise<any>; // Return type should be Promise of GuestEntity
+export interface TravelDataSource {
+  create(travel: TravelModel): Promise<any>; // Return type should be Promise of TravelEntity
+  update(id: string, travel: TravelModel): Promise<any>; // Return type should be Promise of TravelEntity
   delete(id: string): Promise<void>;
-  read(id: string): Promise<any | null>; // Return type should be Promise of GuestEntity or null
-  getAllGuests(): Promise<any[]>; // Return type should be Promise of an array of GuestEntity
+  read(id: string): Promise<any | null>; // Return type should be Promise of TravelEntity or null
+  getAllTravels(): Promise<any[]>; // Return type should be Promise of an array of TravelEntity
 }
 
 // Function to send OTP via SMS
@@ -32,34 +32,34 @@ async function sendOTP(contactNumber: string, message: string): Promise<void> {
   });
 }
 
-export class GuestDataSourceImpl implements GuestDataSource {
+export class TravelDataSourceImpl implements TravelDataSource {
   constructor(private db: mongoose.Connection) { }
   
-  async create(guest: GuestModel): Promise<any> {
-    const existingGuest = await Guest.findOne({ contactInfo: guest.contactInfo });
-    if (existingGuest) {
+  async create(travel: TravelModel): Promise<any> {
+    const existingTravel = await Travel.findOne({ contactInfo: travel.contactInfo });
+    if (existingTravel) {
         throw ApiError.contactInfoExits();
     }
 
-    const guestData = new Guest(guest);
-    const createdGuest = await guestData.save();
+    const travelData = new Travel(travel);
+    const createdTravel = await travelData.save();
 
     // Generate OTP (You can use any logic to generate OTP)
     const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
 
     // Send OTP via SMS
     const message = `Your OTP for verification is: ${otp}`;
-    const mobileNumber = guest.contactInfo; // Use guest.contactInfo for sending OTP
+    const mobileNumber = travel.contactInfo; // Use travel.contactInfo for sending OTP
 
     try {
       await sendOTP(mobileNumber, message); // Wait for OTP sending
     } catch (error) {
       // Handle error when sending OTP
       console.error("Error sending OTP:", error);
-      // You might want to rollback the guest creation here
+      // You might want to rollback the travel creation here
       // throw ApiError.internalServerError("Error sending OTP");
     }
 
-    return createdGuest.toObject(); // Return created guest after sending OTP
+    return createdTravel.toObject(); // Return created travel after sending OTP
   }
 }

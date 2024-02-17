@@ -24,7 +24,7 @@ export const CONFLICT = "already exits";
 //OWN ERROR
 export const EMAIL_CONFLICT = "email already exits";
 
-export const CONTACT_INFO_CONFLICT = "guest exits";
+export const TRAVEL_NAME_CONFLICT = "name exits";
 
 
 

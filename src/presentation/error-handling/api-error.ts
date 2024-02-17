@@ -90,8 +90,8 @@ class ApiError extends ErrorClass {
     return new ApiError(HttpStatus.CONFLICT, ErrorMessage.EMAIL_CONFLICT, "email_conflict");
   }
 
-  static contactInfoExits(): ApiError {
-    return new ApiError(HttpStatus.CONFLICT, ErrorMessage.CONTACT_INFO_CONFLICT, "contactInfo_conflict");
+  static nameExits(): ApiError {
+    return new ApiError(HttpStatus.CONFLICT, ErrorMessage.TRAVEL_NAME_CONFLICT, "name_conflict");
   }
 }
 

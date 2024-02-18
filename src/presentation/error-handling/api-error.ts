@@ -86,9 +86,9 @@ class ApiError extends ErrorClass {
 
 
   //OWN ERROR
-  static emailExits(): ApiError {
-    return new ApiError(HttpStatus.CONFLICT, ErrorMessage.EMAIL_CONFLICT, "email_conflict");
-  }
+  // static emailExits(): ApiError {
+  //   return new ApiError(HttpStatus.CONFLICT, ErrorMessage.EMAIL_CONFLICT, "email_conflict");
+  // }
 }
 
 export default ApiError;

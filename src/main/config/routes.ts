@@ -1,4 +1,4 @@
-import { ownerRouter } from "@presentation/routes/owner-routes";
+import { busRouteRouter } from "@presentation/routes/busRoute-routes";
 import { Express, Router, Request, Response, NextFunction } from "express";
 import ApiError from "@presentation/error-handling/api-error";
 
@@ -11,7 +11,7 @@ export default (app: Express): void => {
   });
 
   // Mount user router
-  app.use("/owner", ownerRouter);
+  app.use("/busRoute", busRouteRouter);
 
   // 404 error handler
   app.use((req: Request, res: Response, next: NextFunction) => {

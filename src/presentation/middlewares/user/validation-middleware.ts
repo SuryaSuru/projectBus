@@ -7,6 +7,7 @@ import { UserModel } from "@domain/user/entities/user"; // Assuming the path to 
 interface UserInput {
   userName: string;
   email: string;
+  info: string;
   password: string;
   firstName?: string;
   lastName?: string;
@@ -40,6 +41,16 @@ const userValidator = (
         "string.max": "Email should have less than 100 characters",
         "any.required": "Email is required",
       }),
+      info: isUpdate
+        ? Joi.string().max(32).optional().trim().messages({
+          "string.email": "Invalid email format",
+          "string.max": "Email should have less than 100 characters",
+        })
+        : Joi.string().max(32).required().trim().messages({
+          "string.email": "Invalid email format",
+          "string.max": "Email should have less than 100 characters",
+          "any.required": "Email is required",
+        }),
     password: isUpdate
       ? Joi.string().max(100).optional().messages({
         "string.max": "Password should have less than 100 characters",

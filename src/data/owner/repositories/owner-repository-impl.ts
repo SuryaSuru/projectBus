@@ -1,6 +1,6 @@
 import { OwnerModel, OwnerEntity } from "@domain/owner/entities/owner";
 import { OwnerRepository } from "@domain/owner/repositories/owner-repository"; 
-import { OwnerDataSource } from "@data/owner/datasource/owner-data-source";
+import { OwnerDataSource, OwnerQuery } from "@data/owner/datasource/owner-data-source";
 import { Either, Right, Left } from "monet";
 import ErrorClass from "@presentation/error-handling/api-error";
 import ApiError from "@presentation/error-handling/api-error";
@@ -46,10 +46,10 @@ export class OwnerRepositoryImpl implements OwnerRepository {
     }
   }
 
-  async getOwners(): Promise<Either<ErrorClass, OwnerEntity[]>> {
+  async getOwners(query: OwnerQuery): Promise<Either<ErrorClass, OwnerEntity[]>> {
     // return await this.dataSource.getAllOwners();
     try {
-      let i = await this.dataSource.getAllOwners();
+      let i = await this.dataSource.getAllOwners(query);
       return Right<ErrorClass, OwnerEntity[]>(i);
     } catch {
       return Left<ErrorClass, OwnerEntity[]>(ApiError.badRequest());

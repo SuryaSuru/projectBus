@@ -5,7 +5,7 @@ export interface OwnerRepository {
   createOwner(Owner: OwnerModel): Promise<Either<ErrorClass, OwnerEntity>>;
   deleteOwner(id: string): Promise<Either<ErrorClass, void>>;
   updateOwner(id: string, data: OwnerModel): Promise<Either<ErrorClass, OwnerEntity>>;
-  getOwners(): Promise<Either<ErrorClass, OwnerEntity[]>>;
+  getOwners(query: object): Promise<Either<ErrorClass, OwnerEntity[]>>;
   getOwnerById(id: string): Promise<Either<ErrorClass, OwnerEntity | null>>;
 }
 

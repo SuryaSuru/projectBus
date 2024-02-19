@@ -4,7 +4,7 @@ import { Either } from "monet";
 import  ErrorClass  from "@presentation/error-handling/api-error";
 
 export interface GetAllOwnersUsecase {
-  execute: () => Promise<Either<ErrorClass, OwnerEntity[]>>;
+  execute: (query: object) => Promise<Either<ErrorClass, OwnerEntity[]>>;
 }
 
 export class GetAllOwners implements GetAllOwnersUsecase {
@@ -14,7 +14,7 @@ export class GetAllOwners implements GetAllOwnersUsecase {
     this.ownerRepository = ownerRepository;
   }
 
-  async execute(): Promise<Either<ErrorClass, OwnerEntity[]>> {
-    return await this.ownerRepository.getOwners();
+  async execute(query: object): Promise<Either<ErrorClass, OwnerEntity[]>> {
+    return await this.ownerRepository.getOwners(query);
   }
 }

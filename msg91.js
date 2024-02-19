@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import ApiError from "@presentation/error-handling/api-error";
-import { OwnerModel } from "@domain/owner/entities/owner";
-import { Owner } from "../models/owner-model";
+import { BusModel } from "@domain/bus/entities/bus";
+import { Bus } from "../models/bus-model";
 import msg91 from "msg91";
 
 const msg91authkey = process.env.SENDER_AUTH;
@@ -11,12 +11,12 @@ const msg91route = process.env.SENDER_ROUTE; // Route number 4 represents Transa
 // Initialize msg91
 const msg91sms = msg91(msg91authkey, msg91sender, msg91route);
 
-export interface OwnerDataSource {
-  create(owner: OwnerModel): Promise<any>; // Return type should be Promise of OwnerEntity
-  update(id: string, owner: OwnerModel): Promise<any>; // Return type should be Promise of OwnerEntity
+export interface BusDataSource {
+  create(bus: BusModel): Promise<any>; // Return type should be Promise of BusEntity
+  update(id: string, bus: BusModel): Promise<any>; // Return type should be Promise of BusEntity
   delete(id: string): Promise<void>;
-  read(id: string): Promise<any | null>; // Return type should be Promise of OwnerEntity or null
-  getAllOwners(): Promise<any[]>; // Return type should be Promise of an array of OwnerEntity
+  read(id: string): Promise<any | null>; // Return type should be Promise of BusEntity or null
+  getAllbuses(): Promise<any[]>; // Return type should be Promise of an array of BusEntity
 }
 
 // Function to send OTP via SMS
@@ -32,34 +32,34 @@ async function sendOTP(contactNumber: string, message: string): Promise<void> {
   });
 }
 
-export class OwnerDataSourceImpl implements OwnerDataSource {
+export class BusDataSourceImpl implements BusDataSource {
   constructor(private db: mongoose.Connection) { }
   
-  async create(owner: OwnerModel): Promise<any> {
-    const existingOwner = await Owner.findOne({ contactInfo: owner.contactInfo });
-    if (existingOwner) {
+  async create(bus: BusModel): Promise<any> {
+    const existingBus = await Bus.findOne({ contactInfo: bus.contactInfo });
+    if (existingBus) {
         throw ApiError.contactInfoExits();
     }
 
-    const ownerData = new Owner(owner);
-    const createdOwner = await ownerData.save();
+    const busData = new Bus(bus);
+    const createdBus = await busData.save();
 
     // Generate OTP (You can use any logic to generate OTP)
     const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
 
     // Send OTP via SMS
     const message = `Your OTP for verification is: ${otp}`;
-    const mobileNumber = owner.contactInfo; // Use owner.contactInfo for sending OTP
+    const mobileNumber = bus.contactInfo; // Use bus.contactInfo for sending OTP
 
     try {
       await sendOTP(mobileNumber, message); // Wait for OTP sending
     } catch (error) {
       // Handle error when sending OTP
       console.error("Error sending OTP:", error);
-      // You might want to rollback the owner creation here
+      // You might want to rollback the bus creation here
       // throw ApiError.internalServerError("Error sending OTP");
     }
 
-    return createdOwner.toObject(); // Return created owner after sending OTP
+    return createdBus.toObject(); // Return created bus after sending OTP
   }
 }

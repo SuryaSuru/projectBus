@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, query } from "express";
 import {
   OwnerModel,
   OwnerEntity,
@@ -81,24 +81,6 @@ export class OwnerService {
     );
 }
 
-  // async getOwnerById(req: Request, res: Response): Promise<void> {
-  //     const ownerId: string = req.params.ownerId;
-
-  //     // Call the GetOwnerByIdUsecase to get the owner by ID
-  //     const owner: Either<ErrorClass, OwnerEntity | null> = await this.getOwnerByIdUsecase.execute(
-  //       ownerId
-  //     );
-
-  //     owner.cata(
-  //       (error: ErrorClass) =>
-  //       res.status(error.status).json({ error: error.message }),
-  //       (result: OwnerEntity | null) =>{
-  //         const responseData = OwnerMapper.toEntity(result, true);
-  //         return res.json(responseData)
-  //       }
-  //     )
-  // }
-
   async getOwnerById(req: Request, res: Response): Promise<void> {
     const ownerId: string = req.params.ownerId;
 
@@ -156,21 +138,29 @@ export class OwnerService {
       )
   }
 
-async getAllOwners(req: Request, res: Response, next:NextFunction): Promise<void> {
-  // Call the GetAllOwnersUsecase to get all owners
-  const owners: Either<ErrorClass, OwnerEntity[]> = await this.getAllOwnersUsecase.execute();
+  async getAllOwners(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const query: any = {};
+    query.search = req.query.search as string;
 
-  owners.cata(
-    (error: ErrorClass) => res.status(error.status).json({ error: error.message }),
-    (result: OwnerEntity[]) => {
-      // Filter out tables with del_status set to "Deleted"
-      const nonDeletedOwner = result.filter((owner) => owner.disabled !== true);
+    const owners: Either<ErrorClass, OwnerEntity[]> = 
+    await this.getAllOwnersUsecase.execute(query);
 
-      // Convert tables from an array of TableEntity to an array of plain JSON objects using TableMapper
-      const responseData = nonDeletedOwner.map((Owner) => OwnerMapper.toEntity(Owner));
-      return res.json(responseData);
-    }
-  )
+    owners.cata(
+        (error: ErrorClass) => {
+            res.status(error.status).json({ error: error.message });
+            next(); // Call next to proceed to the next middleware
+        },
+        () => { // Adjusted to take zero arguments
+            const result: OwnerEntity[] = owners.right(); // Accessing the result from the outer scope
+            const nonDeletedOwners = result.filter(owner => !owner.disabled);
+            const responseData = nonDeletedOwners.map(owner => OwnerMapper.toEntity(owner));
+            res.json(responseData); // Ensure to return the response
+        }
+    );
 }
+
+
+
+  
 
 }

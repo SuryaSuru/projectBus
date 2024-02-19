@@ -7,7 +7,7 @@ import { UserModel } from "@domain/user/entities/user"; // Assuming the path to 
 interface UserInput {
   userName: string;
   email: string;
-  // info: string;
+  info: string;
   password: string;
   firstName?: string;
   lastName?: string;

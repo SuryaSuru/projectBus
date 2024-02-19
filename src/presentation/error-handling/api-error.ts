@@ -84,8 +84,22 @@ class ApiError extends ErrorClass {
     );
   }
 
+
+    //OWN ERROR
   static emailExits(): ApiError {
     return new ApiError(HttpStatus.CONFLICT, ErrorMessage.EMAIL_CONFLICT, "email_conflict");
+  }
+
+  static contactInfoExits(): ApiError {
+    return new ApiError(HttpStatus.CONFLICT, ErrorMessage.CONTACT_INFO_CONFLICT, "contactInfo_conflict");
+  }
+
+  static busNumberExits(): ApiError {
+    return new ApiError(HttpStatus.CONFLICT, ErrorMessage.BUS_NUMBER_CONFLICT, "busNumber_conflict");
+  }
+
+  static nameExits(): ApiError {
+    return new ApiError(HttpStatus.CONFLICT, ErrorMessage.NAME_CONFLICT, "name_conflict");
   }
 }
 

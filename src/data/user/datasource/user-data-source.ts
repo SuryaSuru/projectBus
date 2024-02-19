@@ -1,14 +1,15 @@
 import { UserModel } from "@domain/user/entities/user";
 import { User } from "../models/user-model";
 import mongoose from "mongoose";
-import nodemailer from "nodemailer";
+import nodemailer from "nodemailer"; 
 import ApiError from "@presentation/error-handling/api-error";
+
 export interface UserDataSource {
-  create(user: UserModel): Promise<any>; // Return type should be Promise of UserEntity
-  update(id: string, user: UserModel): Promise<any>; // Return type should be Promise of UserEntity
+  create(user: UserModel): Promise<any>; // Promise<UserModel>
+  update(id: string, user: UserModel): Promise<any>; // Promise<UserModel | null>
   delete(id: string): Promise<void>;
-  read(id: string): Promise<any | null>; // Return type should be Promise of UserEntity or null
-  getAllUsers(): Promise<any[]>; // Return type should be Promise of an array of UserEntity
+  read(id: string): Promise<any | null>; // Promise<UserModel | null>
+  getAllUsers(): Promise<any[]>; // Promise<UserModel[]>
 }
 
 export class UserDataSourceImpl implements UserDataSource {
@@ -52,10 +53,8 @@ export class UserDataSourceImpl implements UserDataSource {
   }
 
   async update(id: string, user: UserModel): Promise<any> {
-    const updatedUser = await User.findByIdAndUpdate(id, user, {
-      new: true,
-    }); // No need for conversion here
-    return updatedUser ? updatedUser.toObject() : null; // Convert to plain JavaScript object before returning
+    const updatedUser = await User.findByIdAndUpdate(id, user, { new: true });
+    return updatedUser ? updatedUser.toObject() : null;
   }
 
   async delete(id: string): Promise<void> {
@@ -64,7 +63,7 @@ export class UserDataSourceImpl implements UserDataSource {
 
   async read(id: string): Promise<any | null> {
     const user = await User.findById(id);
-    return user ? user.toObject() : null; // Convert to plain JavaScript object before returning
+    return user ? user.toObject() : null;
   }
 
   async getAllUsers(): Promise<any[]> {
@@ -72,4 +71,3 @@ export class UserDataSourceImpl implements UserDataSource {
     return users.map((user) => user.toObject());
   }
 }
-

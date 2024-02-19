@@ -20,7 +20,17 @@ export const SERVICE_UNAVAILABLE = "service unavailable";
 
 export const CONFLICT = "already exits";
 
+
+//OWN ERROR
 export const EMAIL_CONFLICT = "email already exits";
+
+export const CONTACT_INFO_CONFLICT = "operator exits";
+
+export const TRAVEL_NAME_CONFLICT = "name exits";
+
+export const BUS_NUMBER_CONFLICT = "number exits";
+
+export const NAME_CONFLICT = "name exits";
 
 
 

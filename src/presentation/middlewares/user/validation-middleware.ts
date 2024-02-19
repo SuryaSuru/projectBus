@@ -72,6 +72,7 @@ const userValidator = (
       "string.max": "Address should have less than 255 characters",
     }),
     disabled: Joi.boolean().optional().default(false),
+    isVerified: Joi.boolean().optional().default(false)
   });
 
   // Validate the input against the schema

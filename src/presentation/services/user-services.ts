@@ -38,6 +38,8 @@ export class UserService {
       
       // Extract user data from the request body and convert it to UserModel
       const userData: UserModel = UserMapper.toModel(req.body);
+      console.log("userData--->", userData);
+      
 
       // Call the createUserUsecase to create the user
       const newUser: Either<ErrorClass, UserEntity> = await this.createUserUsecase.execute(

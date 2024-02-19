@@ -5,11 +5,13 @@ const userSchema = new mongoose.Schema({
   userName: { type: String },
   info: { type: String },
   email: { type: String },
+  info: { type: String },
   password: { type: String },
   firstName: { type: String },
   lastName: { type: String },
   phone: { type: String },
   address: { type: String },
+  isVerified: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false }
 }, { timestamps: true });
 

@@ -9,7 +9,8 @@ export class UserModel {
     public lastName: string = "",
     public phone: string = "",
     public address: string = "",
-    public disabled: boolean = false
+    public disabled: boolean = false,
+    public isVerified: boolean = false
   ) { }
 }
 
@@ -26,6 +27,7 @@ export class UserEntity {
     public lastName: string,
     public phone: string,
     public address: string,
+    public isVerified: boolean = false,
     public disabled: boolean = false
   ) { }
 }
@@ -48,7 +50,8 @@ export class UserMapper {
         lastName: userData.lastName !== undefined ? userData.lastName : existingUser.lastName,
         phone: userData.phone !== undefined ? userData.phone : existingUser.phone,
         address: userData.address !== undefined ? userData.address : existingUser.address,
-        disabled: userData.disabled !== undefined ? userData.disabled : existingUser.disabled
+        disabled: userData.disabled !== undefined ? userData.disabled : existingUser.disabled,
+        isVerified: userData.isVerified !== undefined ? userData.isVerified : existingUser.isVerified
       };
     } else {
       // If existingUser is not provided, create a new UserEntity using userData
@@ -63,7 +66,8 @@ export class UserMapper {
         lastName: userData.lastName,
         phone: userData.phone,
         address: userData.address,
-        disabled: userData.disabled
+        disabled: userData.disabled,
+        isVerified: userData.isVerified
       };
       return userEntity;
     }
@@ -80,7 +84,8 @@ export class UserMapper {
       lastName: user.lastName,
       phone: user.phone,
       address: user.address,
-      disabled: user.disabled
+      disabled: user.disabled,
+      isVerified: user.isVerified
     };
   }
 }

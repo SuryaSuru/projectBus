@@ -19,6 +19,7 @@ export class OwnerModel {
 export class OwnerEntity {
   constructor(
     public id: string | undefined = undefined,
+    public ownerId: string,
     public ownerName: string,
     public email: string,
     public password: string,
@@ -53,6 +54,7 @@ export class OwnerMapper {
     } else {
       const ownerEntity: OwnerEntity = {
         id: includeId ? (ownerData._id ? ownerData._id.toString() : undefined) : ownerData._id.toString(),
+        ownerId: ownerData.ownerId,
         ownerName: ownerData.ownerName,
         email: ownerData.email,
         password: ownerData.password,

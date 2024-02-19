@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const ownerSchema = new mongoose.Schema({
+  ownerId: { type: String },
   ownerName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
@@ -15,5 +16,19 @@ const ownerSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+ownerSchema.pre('save', function (next) {
+  if (!this.ownerId) {
+    // Generate ownerId if not provided
+    this.ownerId = generateOwnerId();
+  }
+  next();
+});
+
+function generateOwnerId() {
+  // Generate random 6-digit alphanumeric string starting with "USE"
+  const randomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+  return "OWN" + randomId;
+}
 
 export const Owner = mongoose.model("Owner", ownerSchema);

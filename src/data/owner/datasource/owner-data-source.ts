@@ -1,5 +1,6 @@
 import { OwnerModel } from "@domain/owner/entities/owner";
 import { Owner } from "../models/owner-model";
+import nodemailer from "nodemailer";
 import mongoose from "mongoose";
 import ApiError from "@presentation/error-handling/api-error";
 export interface OwnerDataSource {
@@ -23,6 +24,31 @@ export class OwnerDataSourceImpl implements OwnerDataSource {
       const ownerData = new Owner(owner);
 
       const createdOwner = await ownerData.save();
+  
+      // Send email to the owner
+      const transporter = nodemailer.createTransport({
+        service: 'gmail', // Use the name of the email service provider, not your email address
+        auth: {
+          user: 'suryaumpteen@gmail.com', // Use 'user' instead of 'owner'
+          pass: 'egye onio jxeo rhmt',
+        },
+      });
+      
+    
+      const mailOptions = {
+        from: 'suryaumpteen@gmail.com',
+        to: owner.email,
+        subject: 'Welcome to Our Platform',
+        text: `Hello ${owner.ownerName}, thank you for signing up!`,
+      };
+  
+      try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent:', info.response);
+      } catch (error) {
+        console.error('Error sending email:', error);
+        // Handle error properly or log it
+      }
 
       return createdOwner.toObject();
     }

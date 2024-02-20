@@ -138,8 +138,11 @@ export class BusScheduleService {
   }
 
   async getAllBusSchedules(req: Request, res: Response, next:NextFunction): Promise<void> {
+    const query: any = {};
+    query.search = req.query.search as string;
+
     // Call the GetAllBusSchedulesUsecase to get all busSchedules
-    const busSchedules: Either<ErrorClass, BusScheduleEntity[]> = await this.getAllBusSchedulesUsecase.execute();
+    const busSchedules: Either<ErrorClass, BusScheduleEntity[]> = await this.getAllBusSchedulesUsecase.execute(query);
   
     busSchedules.cata(
       (error: ErrorClass) => res.status(error.status).json({ error: error.message }),

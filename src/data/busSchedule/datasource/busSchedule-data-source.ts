@@ -7,7 +7,11 @@ export interface BusScheduleDataSource {
   update(id: string, busSchedule: BusScheduleModel): Promise<any>; // Return type should be Promise of BusScheduleEntity
   delete(id: string): Promise<void>;
   read(id: string): Promise<any | null>; // Return type should be Promise of BusScheduleEntity or null
-  getAllBusSchedules(): Promise<any[]>; // Return type should be Promise of an array of BusScheduleEntity
+  getAllBusSchedules(query: BusScheduleQuery): Promise<any[]>; // Return type should be Promise of an array of BusScheduleEntity
+}
+
+export interface BusScheduleQuery {
+  search?: string; // Change ownerId to search
 }
 
 export class BusScheduleDataSourceImpl implements BusScheduleDataSource {
@@ -43,8 +47,19 @@ export class BusScheduleDataSourceImpl implements BusScheduleDataSource {
     return busSchedule ? busSchedule.toObject() : null; // Convert to plain JavaScript object before returning
   }
 
-  async getAllBusSchedules(): Promise<any[]> {
-    const busSchedules = await BusSchedule.find();
+  async getAllBusSchedules(query: BusScheduleQuery): Promise<any[]> {
+    const filter: any = {};
+
+    if (query.search) {
+      const searchRegex = new RegExp(query.search, 'i');
+      filter.$or = [
+        { boardingPoints: searchRegex },
+        { droppingPoints: searchRegex },
+        { scheduleStatus: searchRegex }
+      ];
+    }
+
+    const busSchedules = await BusSchedule.find(filter);
     return busSchedules.map((busSchedule) => busSchedule.toObject());
   }
 }

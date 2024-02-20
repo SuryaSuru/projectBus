@@ -7,7 +7,11 @@ export interface BusOperatorDataSource {
   update(id: string, busOperator: BusOperatorModel): Promise<any>; // Return type should be Promise of BusOperatorEntity
   delete(id: string): Promise<void>;
   read(id: string): Promise<any | null>; // Return type should be Promise of BusOperatorEntity or null
-  getAllBusOperators(): Promise<any[]>; // Return type should be Promise of an array of BusOperatorEntity
+  getAllBusOperators(query: OperatorQuery): Promise<any[]>; // Return type should be Promise of an array of BusOperatorEntity
+}
+
+export interface OperatorQuery {
+  search?: string; // Change ownerId to search
 }
 
 export class BusOperatorDataSourceImpl implements BusOperatorDataSource {
@@ -43,9 +47,19 @@ export class BusOperatorDataSourceImpl implements BusOperatorDataSource {
     return busOperator ? busOperator.toObject() : null; // Convert to plain JavaScript object before returning
   }
 
-  async getAllBusOperators(): Promise<any[]> {
-    const busOperators = await BusOperator.find();
-    return busOperators.map((busOperator) => busOperator.toObject());
+  async getAllBusOperators(query: OperatorQuery): Promise<any[]> {
+    const filter: any = {};
+
+    if (query.search) {
+      const searchRegex = new RegExp(query.search, 'i');
+      filter.$or = [
+        { operatorName: searchRegex },
+        { contactInfo: searchRegex }
+      ];
+    }
+
+    const busOperators = await BusOperator.find(filter);
+    return busOperators.map(busOperator => busOperator.toObject());
   }
 }
 

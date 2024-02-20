@@ -1,6 +1,5 @@
 import { BusModel } from "@domain/bus/entities/bus";
 import { Bus } from "../models/bus-model";
-import nodemailer from "nodemailer";
 import mongoose from "mongoose";
 import ApiError from "@presentation/error-handling/api-error";
 export interface BusDataSource {
@@ -8,7 +7,11 @@ export interface BusDataSource {
   update(id: string, bus: BusModel): Promise<any>; // Return type should be Promise of BusEntity
   delete(id: string): Promise<void>;
   read(id: string): Promise<any | null>; // Return type should be Promise of BusEntity or null
-  getAllbuses(): Promise<any[]>; // Return type should be Promise of an array of BusEntity
+  getAllbuses(query: BusQuery): Promise<any[]>; // Return type should be Promise of an array of BusEntity
+}
+
+export interface BusQuery {
+  search?: string; // Change ownerId to search
 }
 
 export class BusDataSourceImpl implements BusDataSource {
@@ -18,7 +21,7 @@ export class BusDataSourceImpl implements BusDataSource {
 
       const existingBus = await Bus.findOne({ busNumber: bus.busNumber });
       if (existingBus) {
-        throw ApiError.emailExits()
+        throw ApiError.busNumberExits()
       }
 
       const busData = new Bus(bus);
@@ -44,8 +47,18 @@ export class BusDataSourceImpl implements BusDataSource {
     return bus ? bus.toObject() : null; // Convert to plain JavaScript object before returning
   }
 
-  async getAllbuses(): Promise<any[]> {
-    const buses = await Bus.find();
+  async getAllbuses(query: BusQuery): Promise<any[]> {
+    const filter: any = {};
+
+    if (query.search) {
+      const searchRegex = new RegExp(query.search, 'i');
+      filter.$or = [
+        { busNumber: searchRegex },
+        { busStatus: searchRegex }
+      ];
+    }
+
+    const buses = await Bus.find(filter);
     return buses.map((bus) => bus.toObject());
   }
 }

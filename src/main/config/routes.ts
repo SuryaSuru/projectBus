@@ -1,11 +1,11 @@
 import { ownerRouter } from "@presentation/routes/owner-routes";
+import { busOperatorRouter } from "@presentation/routes/busOperator-routes";
 import { busRouter } from "@presentation/routes/bus-routes";
 import { travelRouter } from "@presentation/routes/travel-routes";
-import { busOperatorRouter } from "@presentation/routes/busOperator-routes";
 import { busRouteRouter } from "@presentation/routes/busRoute-routes";
+import { busScheduleRouter } from "@presentation/routes/busSchedule-routes";
 import { guestRouter } from "@presentation/routes/guest-routes";
 import { userRouter } from "@presentation/routes/user-routes";
-import { busScheduleRouter } from "@presentation/routes/busSchedule-routes";
 
 import { Express, Router, Request, Response, NextFunction } from "express";
 import ApiError from "@presentation/error-handling/api-error";
@@ -20,13 +20,13 @@ export default (app: Express): void => {
 
   // Mount user router
   app.use("/owner", ownerRouter);  
+  app.use("/busOperator", busOperatorRouter);
   app.use("/bus", busRouter);
   app.use("/travel", travelRouter);
-  app.use("/busOperator", busOperatorRouter);
   app.use("/busRoute", busRouteRouter);
+  app.use("/busSchedule", busScheduleRouter);
   app.use("/guest", guestRouter);
   app.use("/user", userRouter);
-  app.use("/busSchedule", busScheduleRouter);
 
   // 404 error handler
   app.use((req: Request, res: Response, next: NextFunction) => {

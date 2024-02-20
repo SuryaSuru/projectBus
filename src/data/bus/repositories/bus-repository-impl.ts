@@ -1,6 +1,6 @@
 import { BusModel, BusEntity } from "@domain/bus/entities/bus";
 import { BusRepository } from "@domain/bus/repositories/bus-repository"; 
-import { BusDataSource } from "@data/bus/datasource/bus-data-source";
+import { BusDataSource, BusQuery } from "@data/bus/datasource/bus-data-source";
 import { Either, Right, Left } from "monet";
 import ErrorClass from "@presentation/error-handling/api-error";
 import ApiError from "@presentation/error-handling/api-error";
@@ -46,10 +46,10 @@ export class BusRepositoryImpl implements BusRepository {
     }
   }
 
-  async getbuses(): Promise<Either<ErrorClass, BusEntity[]>> {
+  async getbuses(query: BusQuery): Promise<Either<ErrorClass, BusEntity[]>> {
     // return await this.dataSource.getAllbuses();
     try {
-      let i = await this.dataSource.getAllbuses();
+      let i = await this.dataSource.getAllbuses(query);
       return Right<ErrorClass, BusEntity[]>(i);
     } catch {
       return Left<ErrorClass, BusEntity[]>(ApiError.badRequest());

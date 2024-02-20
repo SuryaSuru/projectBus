@@ -1,6 +1,6 @@
 import { TravelModel, TravelEntity } from "@domain/travel/entities/travel";
 import { TravelRepository } from "@domain/travel/repositories/travel-repository"; 
-import { TravelDataSource } from "@data/travel/datasource/travel-data-source";
+import { TravelDataSource, TravelQuery } from "@data/travel/datasource/travel-data-source";
 import { Either, Right, Left } from "monet";
 import ErrorClass from "@presentation/error-handling/api-error";
 import ApiError from "@presentation/error-handling/api-error";
@@ -46,10 +46,10 @@ export class TravelRepositoryImpl implements TravelRepository {
     }
   }
 
-  async getTravels(): Promise<Either<ErrorClass, TravelEntity[]>> {
+  async getTravels(query: TravelQuery): Promise<Either<ErrorClass, TravelEntity[]>> {
     // return await this.dataSource.getAllTravels();
     try {
-      let i = await this.dataSource.getAllTravels();
+      let i = await this.dataSource.getAllTravels(query);
       return Right<ErrorClass, TravelEntity[]>(i);
     } catch {
       return Left<ErrorClass, TravelEntity[]>(ApiError.badRequest());

@@ -1,6 +1,6 @@
 import { BusRouteModel, BusRouteEntity } from "@domain/busRoute/entities/busRoute";
 import { BusRouteRepository } from "@domain/busRoute/repositories/busRoute-repository"; 
-import { BusRouteDataSource } from "@data/busRoute/datasource/busRoute-data-source";
+import { BusRouteDataSource, BusRouteQuery } from "@data/busRoute/datasource/busRoute-data-source";
 import { Either, Right, Left } from "monet";
 import ErrorClass from "@presentation/error-handling/api-error";
 import ApiError from "@presentation/error-handling/api-error";
@@ -46,10 +46,10 @@ export class BusRouteRepositoryImpl implements BusRouteRepository {
     }
   }
 
-  async getBusRoutes(): Promise<Either<ErrorClass, BusRouteEntity[]>> {
+  async getBusRoutes(query: BusRouteQuery): Promise<Either<ErrorClass, BusRouteEntity[]>> {
     // return await this.dataSource.getAllBusRoutes();
     try {
-      let i = await this.dataSource.getAllBusRoutes();
+      let i = await this.dataSource.getAllBusRoutes(query);
       return Right<ErrorClass, BusRouteEntity[]>(i);
     } catch {
       return Left<ErrorClass, BusRouteEntity[]>(ApiError.badRequest());

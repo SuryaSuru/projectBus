@@ -1,6 +1,6 @@
 import { BusScheduleModel, BusScheduleEntity } from "@domain/busSchedule/entities/busSchedule";
 import { BusScheduleRepository } from "@domain/busSchedule/repositories/busSchedule-repository"; 
-import { BusScheduleDataSource } from "@data/busSchedule/datasource/busSchedule-data-source";
+import { BusScheduleDataSource, BusScheduleQuery } from "@data/busSchedule/datasource/busSchedule-data-source";
 import { Either, Right, Left } from "monet";
 import ErrorClass from "@presentation/error-handling/api-error";
 import ApiError from "@presentation/error-handling/api-error";
@@ -46,10 +46,10 @@ export class BusScheduleRepositoryImpl implements BusScheduleRepository {
     }
   }
 
-  async getBusSchedules(): Promise<Either<ErrorClass, BusScheduleEntity[]>> {
+  async getBusSchedules(query: BusScheduleQuery): Promise<Either<ErrorClass, BusScheduleEntity[]>> {
     // return await this.dataSource.getAllBusSchedules();
     try {
-      let i = await this.dataSource.getAllBusSchedules();
+      let i = await this.dataSource.getAllBusSchedules(query);
       return Right<ErrorClass, BusScheduleEntity[]>(i);
     } catch {
       return Left<ErrorClass, BusScheduleEntity[]>(ApiError.badRequest());

@@ -17,7 +17,7 @@ interface BusInput {
   image?: string;
   fare?: number;
   registrationDate?: Date;
-  busestatus?: string;
+  busStatus?: string;
   disabled?: boolean;
 }
 
@@ -55,7 +55,7 @@ const busValidator = (
     image: Joi.string().max(50).optional().trim(),
     fare: isUpdate ? Joi.number().optional() : Joi.number().required(),
     registrationDate: Joi.date().optional(),
-    busestatus: isUpdate 
+    busStatus: isUpdate 
     ? Joi.string().valid('Active', 'Inactive').optional().trim() 
     : Joi.string().valid('Active', 'Inactive').required().trim(),
     disabled: Joi.boolean().optional()

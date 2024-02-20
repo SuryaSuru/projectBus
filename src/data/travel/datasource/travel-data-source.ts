@@ -7,7 +7,11 @@ export interface TravelDataSource {
   update(id: string, travel: TravelModel): Promise<any>; // Return type should be Promise of TravelEntity
   delete(id: string): Promise<void>;
   read(id: string): Promise<any | null>; // Return type should be Promise of TravelEntity or null
-  getAllTravels(): Promise<any[]>; // Return type should be Promise of an array of TravelEntity
+  getAllTravels(query: TravelQuery): Promise<any[]>; // Return type should be Promise of an array of TravelEntity
+}
+
+export interface TravelQuery {
+  search?: string; // Change ownerId to search
 }
 
 export class TravelDataSourceImpl implements TravelDataSource {
@@ -43,8 +47,17 @@ export class TravelDataSourceImpl implements TravelDataSource {
     return travel ? travel.toObject() : null; // Convert to plain JavaScript object before returning
   }
 
-  async getAllTravels(): Promise<any[]> {
-    const travels = await Travel.find();
+  async getAllTravels(query: TravelQuery): Promise<any[]> {
+    const filter: any = {};
+
+    if (query.search) {
+      const searchRegex = new RegExp(query.search, 'i');
+      filter.$or = [
+        { travelName: searchRegex }
+      ];
+    }
+
+    const travels = await Travel.find(filter);
     return travels.map((travel) => travel.toObject());
   }
 }

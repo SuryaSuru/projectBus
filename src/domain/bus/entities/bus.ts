@@ -13,7 +13,7 @@ export class BusModel {
     public image: string = "",
     public fare: number = 0,
     public registrationDate: Date = new Date(),
-    public busestatus: string = "",
+    public busStatus: string = "",
     public disabled: boolean = false
   ) {}
 }
@@ -34,7 +34,7 @@ export class BusEntity {
     public image: string,
     public fare: number,
     public registrationDate: Date,
-    public busestatus: string,
+    public busStatus: string,
     public disabled: boolean = false
   ) {}
 }
@@ -57,7 +57,7 @@ export class BusMapper {
         image: busData.image !== undefined ? busData.image : existingBus.image,
         fare: busData.fare !== undefined ? busData.fare : existingBus.fare,
         registrationDate: busData.registrationDate !== undefined ? busData.registrationDate : existingBus.registrationDate,
-        busestatus: busData.busestatus !== undefined ? busData.busestatus : existingBus.busestatus,
+        busStatus: busData.busStatus !== undefined ? busData.busStatus : existingBus.busStatus,
         disabled: busData.disabled !== undefined ? busData.disabled : existingBus.disabled
       };
     } else {
@@ -76,7 +76,7 @@ export class BusMapper {
         image: busData.image,
         fare: busData.fare,
         registrationDate: busData.registrationDate,
-        busestatus: busData.busestatus,
+        busStatus: busData.busStatus,
         disabled: busData.disabled
       };
       return busEntity;
@@ -99,7 +99,7 @@ export class BusMapper {
       image: bus.image,
       fare: bus.fare,
       registrationDate: bus.registrationDate,
-      busestatus: bus.busestatus,
+      busStatus: bus.busStatus,
       disabled: bus.disabled
     };
   }

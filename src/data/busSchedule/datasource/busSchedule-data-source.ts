@@ -43,7 +43,9 @@ export class BusScheduleDataSourceImpl implements BusScheduleDataSource {
   }
 
   async read(id: string): Promise<any | null> {
-    const busSchedule = await BusSchedule.findById(id);
+    const busSchedule = await BusSchedule.findById(id)
+    .populate('routeId') // Populate the 'operatorId' field with data from 'BusRoute' collection
+    .populate('busId');   // Populate the 'ownerId' field with data from 'Owner' collection;
     return busSchedule ? busSchedule.toObject() : null; // Convert to plain JavaScript object before returning
   }
 

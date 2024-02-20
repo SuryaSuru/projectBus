@@ -7,12 +7,13 @@ import { UserModel } from "@domain/user/entities/user"; // Assuming the path to 
 interface UserInput {
   userName: string;
   email: string;
-  // info: string;
+  info: string;
   password: string;
   firstName?: string;
   lastName?: string;
   phone?: string;
   address?: string;
+  isVerified?: boolean;
   disabled?: boolean;
 }
 
@@ -71,8 +72,8 @@ const userValidator = (
     address: Joi.string().max(255).optional().allow('').messages({
       "string.max": "Address should have less than 255 characters",
     }),
-    disabled: Joi.boolean().optional().default(false),
-    isVerified: Joi.boolean().optional().default(false)
+    isVerified: Joi.boolean().optional().default(false),
+    disabled: Joi.boolean().optional().default(false)
   });
 
   // Validate the input against the schema

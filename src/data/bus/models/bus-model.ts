@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const buseschema = new mongoose.Schema({
-  operatorId: { type: mongoose.Schema.Types.ObjectId, ref: 'BusRoute', required: true },
+  operatorId: { type: mongoose.Schema.Types.ObjectId, ref: 'BusOperator', required: true },
   ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Owner', required: true },
   busNumber: { type: String, required: true },
   type: { type: String, enum: ['AC', 'Delux', 'Normal', 'Suspense AC', 'Suspense Delux'], required: true },

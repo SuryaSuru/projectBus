@@ -43,7 +43,10 @@ export class BusDataSourceImpl implements BusDataSource {
   }
 
   async read(id: string): Promise<any | null> {
-    const bus = await Bus.findById(id);
+    const bus = await Bus.findById(id)
+      .populate('operatorId') // Populate the 'operatorId' field with data from 'BusRoute' collection
+      .populate('ownerId');   // Populate the 'ownerId' field with data from 'Owner' collection
+  
     return bus ? bus.toObject() : null; // Convert to plain JavaScript object before returning
   }
 

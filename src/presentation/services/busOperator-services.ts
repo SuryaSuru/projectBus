@@ -139,8 +139,12 @@ export class BusOperatorService {
   }
 
   async getAllBusOperators(req: Request, res: Response, next:NextFunction): Promise<void> {
+    const query: any = {};
+    query.search = req.query.search as string;
+
     // Call the GetAllBusOperatorsUsecase to get all busOperators
-    const busOperators: Either<ErrorClass, BusOperatorEntity[]> = await this.getAllBusOperatorsUsecase.execute();
+    const busOperators: Either<ErrorClass, BusOperatorEntity[]> = 
+    await this.getAllBusOperatorsUsecase.execute(query);
   
     busOperators.cata(
       (error: ErrorClass) => res.status(error.status).json({ error: error.message }),

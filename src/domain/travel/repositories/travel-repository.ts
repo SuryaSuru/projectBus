@@ -5,7 +5,7 @@ export interface TravelRepository {
   createTravel(Travel: TravelModel): Promise<Either<ErrorClass, TravelEntity>>;
   deleteTravel(id: string): Promise<Either<ErrorClass, void>>;
   updateTravel(id: string, data: TravelModel): Promise<Either<ErrorClass, TravelEntity>>;
-  getTravels(): Promise<Either<ErrorClass, TravelEntity[]>>;
+  getTravels(query: object): Promise<Either<ErrorClass, TravelEntity[]>>;
   getTravelById(id: string): Promise<Either<ErrorClass, TravelEntity | null>>;
 }
 

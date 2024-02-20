@@ -139,8 +139,11 @@ export class BusRouteService {
   }
 
   async getAllBusRoutes(req: Request, res: Response, next:NextFunction): Promise<void> {
+    const query: any = {};
+    query.search = req.query.search as string;
+
     // Call the GetAllBusRoutesUsecase to get all busRoutes
-    const busRoutes: Either<ErrorClass, BusRouteEntity[]> = await this.getAllBusRoutesUsecase.execute();
+    const busRoutes: Either<ErrorClass, BusRouteEntity[]> = await this.getAllBusRoutesUsecase.execute(query);
   
     busRoutes.cata(
       (error: ErrorClass) => res.status(error.status).json({ error: error.message }),

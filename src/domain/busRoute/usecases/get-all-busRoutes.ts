@@ -4,7 +4,7 @@ import { Either } from "monet";
 import  ErrorClass  from "@presentation/error-handling/api-error";
 
 export interface GetAllBusRoutesUsecase {
-  execute: () => Promise<Either<ErrorClass, BusRouteEntity[]>>;
+  execute: (query: object) => Promise<Either<ErrorClass, BusRouteEntity[]>>;
 }
 
 export class GetAllBusRoutes implements GetAllBusRoutesUsecase {
@@ -14,7 +14,7 @@ export class GetAllBusRoutes implements GetAllBusRoutesUsecase {
     this.busRouteRepository = busRouteRepository;
   }
 
-  async execute(): Promise<Either<ErrorClass, BusRouteEntity[]>> {
-    return await this.busRouteRepository.getBusRoutes();
+  async execute(query: object): Promise<Either<ErrorClass, BusRouteEntity[]>> {
+    return await this.busRouteRepository.getBusRoutes(query);
   }
 }

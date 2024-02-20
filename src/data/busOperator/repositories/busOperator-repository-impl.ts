@@ -1,6 +1,6 @@
 import { BusOperatorModel, BusOperatorEntity } from "@domain/busOperator/entities/busOperator";
 import { BusOperatorRepository } from "@domain/busOperator/repositories/busOperator-repository"; 
-import { BusOperatorDataSource } from "@data/busOperator/datasource/busOperator-data-source";
+import { BusOperatorDataSource, OperatorQuery } from "@data/busOperator/datasource/busOperator-data-source";
 import { Either, Right, Left } from "monet";
 import ErrorClass from "@presentation/error-handling/api-error";
 import ApiError from "@presentation/error-handling/api-error";
@@ -46,10 +46,10 @@ export class BusOperatorRepositoryImpl implements BusOperatorRepository {
     }
   }
 
-  async getBusOperators(): Promise<Either<ErrorClass, BusOperatorEntity[]>> {
+  async getBusOperators(query: OperatorQuery): Promise<Either<ErrorClass, BusOperatorEntity[]>> {
     // return await this.dataSource.getAllBusOperators();
     try {
-      let i = await this.dataSource.getAllBusOperators();
+      let i = await this.dataSource.getAllBusOperators(query);
       return Right<ErrorClass, BusOperatorEntity[]>(i);
     } catch {
       return Left<ErrorClass, BusOperatorEntity[]>(ApiError.badRequest());

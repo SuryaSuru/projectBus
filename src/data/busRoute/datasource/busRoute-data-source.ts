@@ -7,7 +7,11 @@ export interface BusRouteDataSource {
   update(id: string, busRoute: BusRouteModel): Promise<any>; // Return type should be Promise of BusRouteEntity
   delete(id: string): Promise<void>;
   read(id: string): Promise<any | null>; // Return type should be Promise of BusRouteEntity or null
-  getAllBusRoutes(): Promise<any[]>; // Return type should be Promise of an array of BusRouteEntity
+  getAllBusRoutes(query: BusRouteQuery): Promise<any[]>; // Return type should be Promise of an array of BusRouteEntity
+}
+
+export interface BusRouteQuery {
+  search?: string; // Change ownerId to search
 }
 
 export class BusRouteDataSourceImpl implements BusRouteDataSource {
@@ -38,8 +42,17 @@ export class BusRouteDataSourceImpl implements BusRouteDataSource {
     return busRoute ? busRoute.toObject() : null; // Convert to plain JavaScript object before returning
   }
 
-  async getAllBusRoutes(): Promise<any[]> {
-    const busRoutes = await BusRoute.find();
+  async getAllBusRoutes(query: BusRouteQuery): Promise<any[]> {
+    const filter: any = {};
+
+    if (query.search) {
+      const searchRegex = new RegExp(query.search, 'i');
+      filter.$or = [
+        { routeStatus: searchRegex }
+      ];
+    }
+
+    const busRoutes = await BusRoute.find(filter);
     return busRoutes.map((busRoute) => busRoute.toObject());
   }
 }

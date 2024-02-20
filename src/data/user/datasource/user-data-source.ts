@@ -9,7 +9,11 @@ export interface UserDataSource {
   update(id: string, user: UserModel): Promise<any>; // Promise<UserModel | null>
   delete(id: string): Promise<void>;
   read(id: string): Promise<any | null>; // Promise<UserModel | null>
-  getAllUsers(): Promise<any[]>; // Promise<UserModel[]>
+  getAllUsers(query: UserQuery): Promise<any[]>; // Promise<UserModel[]>
+}
+
+export interface UserQuery {
+  search?: string; // Change ownerId to search
 }
 
 export class UserDataSourceImpl implements UserDataSource {
@@ -66,8 +70,17 @@ export class UserDataSourceImpl implements UserDataSource {
     return user ? user.toObject() : null;
   }
 
-  async getAllUsers(): Promise<any[]> {
-    const users = await User.find();
+  async getAllUsers(query: UserQuery): Promise<any[]> {
+    const filter: any = {};
+
+    if (query.search) {
+      const searchRegex = new RegExp(query.search, 'i');
+      filter.$or = [
+        { userId: searchRegex }
+      ];
+    }
+
+    const users = await User.find(filter);
     return users.map((user) => user.toObject());
   }
 }

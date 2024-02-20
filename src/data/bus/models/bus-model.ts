@@ -14,7 +14,7 @@ const buseschema = new mongoose.Schema({
   image: { type: String, maxlength: 50 },
   fare: { type: mongoose.Schema.Types.Decimal128, required: true },
   registrationDate: { type: Date, default: Date.now },
-  busestatus: { type: String, enum: ['Active', 'Inactive'], required: true },
+  busStatus: { type: String, enum: ['Active', 'Inactive'], required: true },
   disabled: { type: Boolean, default: false }
 }, {
   timestamps: true

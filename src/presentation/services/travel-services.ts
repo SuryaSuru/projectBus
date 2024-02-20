@@ -139,8 +139,11 @@ export class TravelService {
   }
 
   async getAllTravels(req: Request, res: Response, next:NextFunction): Promise<void> {
+    const query: any = {};
+    query.search = req.query.search as string;
+
     // Call the GetAllTravelsUsecase to get all travels
-    const travels: Either<ErrorClass, TravelEntity[]> = await this.getAllTravelsUsecase.execute();
+    const travels: Either<ErrorClass, TravelEntity[]> = await this.getAllTravelsUsecase.execute(query);
   
     travels.cata(
       (error: ErrorClass) => res.status(error.status).json({ error: error.message }),

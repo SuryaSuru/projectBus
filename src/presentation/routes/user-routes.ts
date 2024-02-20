@@ -30,7 +30,7 @@ const userService = new UserService(
   deleteUserUsecase,
   getUserByIdUsecase,
   updateUserUsecase,
-  getAllUsersUsecase
+  getAllUsersUsecase,
 );
 
 // Create an Express router

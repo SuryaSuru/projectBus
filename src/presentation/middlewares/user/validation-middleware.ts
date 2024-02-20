@@ -13,6 +13,7 @@ interface UserInput {
   lastName?: string;
   phone?: string;
   address?: string;
+  isVerified?: boolean;
   disabled?: boolean;
 }
 
@@ -71,8 +72,8 @@ const userValidator = (
     address: Joi.string().max(255).optional().allow('').messages({
       "string.max": "Address should have less than 255 characters",
     }),
-    disabled: Joi.boolean().optional().default(false),
-    isVerified: Joi.boolean().optional().default(false)
+    isVerified: Joi.boolean().optional().default(false),
+    disabled: Joi.boolean().optional().default(false)
   });
 
   // Validate the input against the schema

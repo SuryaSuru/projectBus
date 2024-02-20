@@ -25,7 +25,7 @@ export class UserService {
     deleteUserUsecase: DeleteUserUsecase,
     getUserByIdUsecase: GetUserByIdUsecase,
     updateUserUsecase: UpdateUserUsecase,
-    getAllUsersUsecase: GetAllUsersUsecase
+    getAllUsersUsecase: GetAllUsersUsecase,
   ) {
     this.createUserUsecase = createUserUsecase;
     this.deleteUserUsecase = deleteUserUsecase;

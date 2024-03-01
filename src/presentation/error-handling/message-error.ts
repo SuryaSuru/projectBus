@@ -32,5 +32,9 @@ export const BUS_NUMBER_CONFLICT = "number exits";
 
 export const NAME_CONFLICT = "name exits";
 
+export const FORBIDDEN = "You are not authorized to do that!"
+
+export const USER_NOT_FOUND = "Admin does not exit";
+
 
 

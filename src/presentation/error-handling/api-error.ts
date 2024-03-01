@@ -101,6 +101,22 @@ class ApiError extends ErrorClass {
   static nameExits(): ApiError {
     return new ApiError(HttpStatus.CONFLICT, ErrorMessage.NAME_CONFLICT, "name_conflict");
   }
+
+  static forbidden(): ApiError {
+    return new ApiError(
+      HttpStatus.FORBIDDEN,
+      ErrorMessage.FORBIDDEN,
+      "forbidden"
+    );
+  }
+
+  static userNotFound(): ApiError {
+    return new ApiError(
+      HttpStatus.NOT_FOUND,
+      ErrorMessage.USER_NOT_FOUND,
+      "usernotfound"
+    );
+  }
 }
 
 export default ApiError;

@@ -7,11 +7,16 @@ export class UserModel {
     public password: string = "",
     public firstName: string = "",
     public lastName: string = "",
+    public type: string = "",
     public phone: string = "",
     public address: string = "",
     public disabled: boolean = false,
     public isVerified: boolean = false
   ) { }
+}
+
+export class LoginModel {
+  constructor(public email: string = "", public password: string = "") {}
 }
 
 // User Entity provided by User Repository is converted to Express API Response
@@ -25,11 +30,16 @@ export class UserEntity {
     public password: string,
     public firstName: string,
     public lastName: string,
+    public type: string,
     public phone: string,
     public address: string,
     public isVerified: boolean = false,
     public disabled: boolean = false
   ) { }
+}
+
+export class LoginEntity {
+  constructor(public email: string, public password: string) {}
 }
 
 export class UserMapper {
@@ -48,6 +58,7 @@ export class UserMapper {
         password: userData.password !== undefined ? userData.password : existingUser.password,
         firstName: userData.firstName !== undefined ? userData.firstName : existingUser.firstName,
         lastName: userData.lastName !== undefined ? userData.lastName : existingUser.lastName,
+        type: userData.type !== undefined ? userData.type : existingUser.type,
         phone: userData.phone !== undefined ? userData.phone : existingUser.phone,
         address: userData.address !== undefined ? userData.address : existingUser.address,
         disabled: userData.disabled !== undefined ? userData.disabled : existingUser.disabled,
@@ -64,6 +75,7 @@ export class UserMapper {
         password: userData.password,
         firstName: userData.firstName,
         lastName: userData.lastName,
+        type: userData.type,
         phone: userData.phone,
         address: userData.address,
         disabled: userData.disabled,
@@ -82,6 +94,7 @@ export class UserMapper {
       password: user.password,
       firstName: user.firstName,
       lastName: user.lastName,
+      type: user.type,
       phone: user.phone,
       address: user.address,
       disabled: user.disabled,

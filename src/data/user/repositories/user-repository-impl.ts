@@ -66,20 +66,35 @@ export class UserRepositoryImpl implements UserRepository {
     }
   }
 
-  async loginUser(
+  async login(
     email: string,
-    firebaseDeviceToken: string
+    password: string
   ): Promise<Either<ErrorClass, UserEntity>> {
     try {
-      const request = await this.dataSource.userLogin(
-        email,
-        firebaseDeviceToken
-      ); // Use the booking request data source
-      return request
-        ? Right<ErrorClass, UserEntity>(request)
-        : Left<ErrorClass, UserEntity>(ApiError.notFound());
-    } catch (err) {
+      const res = await this.dataSource.login(email, password);
+
+      return Right<ErrorClass, UserEntity>(res);
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 404) {
+        return Left<ErrorClass, UserEntity>(ApiError.notFound());
+      }
       return Left<ErrorClass, UserEntity>(ApiError.badRequest());
+    }
+  }
+
+  async logout(): Promise<Either<ErrorClass, string>> {
+    console.log("1243qe3432");
+    
+    try {
+      const res = await this.dataSource.logout();
+      return Right<ErrorClass, string>("Logged Out");
+    } catch (error) {
+      if (error instanceof ApiError) {
+        return Left<ErrorClass, string>(error); 
+      }
+      return Left<ErrorClass, string>(
+        ApiError.customError(500, "Logout Failed")
+      ); 
     }
   }
 }

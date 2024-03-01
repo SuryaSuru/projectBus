@@ -7,6 +7,7 @@ const busRouteSchema = new mongoose.Schema({
   estimatedDuration: { type: Date }, // Note: Time is not directly supported in Mongoose, you can use Date type
   price: { type: Number, required: true },
   routeStatus: { type: String, enum: ['Active', 'Inactive'], required: true },
+  currentLocation: { type: String },
   disabled: { type: Boolean, default: false }
 }, {
   timestamps: true

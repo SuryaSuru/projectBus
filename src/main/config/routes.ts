@@ -6,6 +6,9 @@ import { busRouteRouter } from "@presentation/routes/busRoute-routes";
 import { busScheduleRouter } from "@presentation/routes/busSchedule-routes";
 import { guestRouter } from "@presentation/routes/guest-routes";
 import { userRouter } from "@presentation/routes/user-routes";
+import { bookingRouter } from "@presentation/routes/booking-routes";
+import { paymentRouter } from "@presentation/routes/payment-routes";
+import { feedbackRouter } from "@presentation/routes/Feedback-routes";
 
 import { Express, Router, Request, Response, NextFunction } from "express";
 import ApiError from "@presentation/error-handling/api-error";
@@ -27,6 +30,9 @@ export default (app: Express): void => {
   app.use("/busSchedule", busScheduleRouter);
   app.use("/guest", guestRouter);
   app.use("/user", userRouter);
+  app.use("/booking", bookingRouter);
+  app.use("/payment", paymentRouter);  
+  app.use("/feedback", feedbackRouter);
 
   // 404 error handler
   app.use((req: Request, res: Response, next: NextFunction) => {

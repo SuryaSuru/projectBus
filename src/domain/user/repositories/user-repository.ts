@@ -7,8 +7,7 @@ export interface UserRepository {
   updateUser(id: string, data: UserModel): Promise<Either<ErrorClass, UserEntity>>;
   getUsers(query: object): Promise<Either<ErrorClass, UserEntity[]>>;
   getUserById(id: string): Promise<Either<ErrorClass, UserEntity | null>>;
-
-  // Method to login user with Email
-  loginUser(email: string, firebaseDeviceToken: string): Promise<Either<ErrorClass, UserEntity>>
+  login(email: string, password: string): Promise<any>;
+  logout(): Promise<any>;
 }
 

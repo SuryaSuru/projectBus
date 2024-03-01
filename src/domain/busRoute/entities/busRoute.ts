@@ -7,6 +7,7 @@ export class BusRouteModel {
     public estimatedDuration: Date | undefined = undefined,
     public price: number = 0,
     public routeStatus: string = "Active",
+    public currentLocation: string = "",
     public disabled: boolean = false
   ) {}
 }
@@ -21,6 +22,7 @@ export class BusRouteEntity {
     public estimatedDuration: Date | undefined,
     public price: number,
     public routeStatus: string,
+    public currentLocation: string,
     public disabled: boolean
   ) {}
 }
@@ -37,6 +39,7 @@ export class BusRouteMapper {
         estimatedDuration: busRouteData.estimatedDuration !== undefined ? busRouteData.estimatedDuration : existingBusRoute.estimatedDuration,
         price: busRouteData.price !== undefined ? busRouteData.price : existingBusRoute.price,
         routeStatus: busRouteData.routeStatus !== undefined ? busRouteData.routeStatus : existingBusRoute.routeStatus,
+        currentLocation: busRouteData.currentLocation !== undefined ? busRouteData.currentLocation : existingBusRoute.currentLocation,
         disabled: busRouteData.disabled !== undefined ? busRouteData.disabled : existingBusRoute.disabled
       };
     } else {
@@ -48,6 +51,7 @@ export class BusRouteMapper {
         estimatedDuration: busRouteData.estimatedDuration,
         price: busRouteData.price,
         routeStatus: busRouteData.routeStatus,
+        currentLocation: busRouteData.currentLocation,
         disabled: busRouteData.disabled
       };
       return busRouteEntity;
@@ -63,6 +67,7 @@ export class BusRouteMapper {
       estimatedDuration: busRoute.estimatedDuration,
       price: busRoute.price,
       routeStatus: busRoute.routeStatus,
+      currentLocation: busRoute.currentLocation,
       disabled: busRoute.disabled
     };
   }

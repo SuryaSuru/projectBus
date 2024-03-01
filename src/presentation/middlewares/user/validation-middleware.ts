@@ -11,6 +11,7 @@ interface UserInput {
   password: string;
   firstName?: string;
   lastName?: string;
+  type?: string;
   phone?: string;
   address?: string;
   isVerified?: boolean;
@@ -65,6 +66,9 @@ const userValidator = (
     }),
     lastName: Joi.string().max(50).optional().allow('').messages({
       "string.max": "Last name should have less than 50 characters",
+    }),
+    type: Joi.string().max(50).optional().allow('').messages({
+      "string.max": "Type should have less than 50 characters",
     }),
     phone: Joi.string().max(20).optional().allow('').messages({
       "string.max": "Phone should have less than 20 characters",

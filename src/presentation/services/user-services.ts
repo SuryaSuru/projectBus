@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import {User} from "@data/user/models/user-model"
+import bcrypt from "bcrypt";
 import {
   UserModel,
   UserEntity,
@@ -9,9 +11,12 @@ import { DeleteUserUsecase } from "@domain/user/usecases/delete-user";
 import { GetUserByIdUsecase } from "@domain/user/usecases/get-user-by-id";
 import { UpdateUserUsecase } from "@domain/user/usecases/update-user";
 import { GetAllUsersUsecase } from "@domain/user/usecases/get-all-users";
+import { LoginUserUsecase } from "@domain/user/usecases/login-user";
+import { LogoutUserUsecase } from "@domain/user/usecases/logout-user";
 import ApiError from "@presentation/error-handling/api-error";
 import { Either } from "monet";
 import ErrorClass from "@presentation/error-handling/api-error";
+import { generateRandomPassword } from "@presentation/middlewares/randomPassword";
 
 export class UserService {
   private readonly createUserUsecase: CreateUserUsecase;
@@ -19,6 +24,8 @@ export class UserService {
   private readonly getUserByIdUsecase: GetUserByIdUsecase;
   private readonly updateUserUsecase: UpdateUserUsecase;
   private readonly getAllUsersUsecase: GetAllUsersUsecase;
+  private readonly loginUserUsecase: LoginUserUsecase;
+  private readonly logoutUserUsecase: LogoutUserUsecase;
 
   constructor(
     createUserUsecase: CreateUserUsecase,
@@ -26,34 +33,37 @@ export class UserService {
     getUserByIdUsecase: GetUserByIdUsecase,
     updateUserUsecase: UpdateUserUsecase,
     getAllUsersUsecase: GetAllUsersUsecase,
+    loginUserUsecase: LoginUserUsecase,
+    logoutUserUsecase: LogoutUserUsecase
   ) {
     this.createUserUsecase = createUserUsecase;
     this.deleteUserUsecase = deleteUserUsecase;
     this.getUserByIdUsecase = getUserByIdUsecase;
     this.updateUserUsecase = updateUserUsecase;
     this.getAllUsersUsecase = getAllUsersUsecase;
+    this.loginUserUsecase = loginUserUsecase;
+    this.logoutUserUsecase = logoutUserUsecase;
   }
 
   async createUser(req: Request, res: Response): Promise<void> {
 
-    // Extract user data from the request body and convert it to UserModel
+    const randomPassword = generateRandomPassword(5)
+
+    req.body.password = randomPassword;
+
     const userData: UserModel = UserMapper.toModel(req.body);
-    console.log("userData--->", userData);
-
-
-    // Call the createUserUsecase to create the user
-    const newUser: Either<ErrorClass, UserEntity> = await this.createUserUsecase.execute(
-      userData
-    );
-
+    
+    const newUser: Either<ErrorClass, UserEntity> =
+      await this.createUserUsecase.execute(userData);
+    
     newUser.cata(
       (error: ErrorClass) =>
         res.status(error.status).json({ error: error.message }),
       (result: UserEntity) => {
-        const responseData = UserMapper.toEntity(result, true);
-        return res.json(responseData)
+        const resData = UserMapper.toEntity(result, true);
+        return res.json(resData);
       }
-    )
+    );
   }
 
   async deleteUser(req: Request, res: Response): Promise<void> {
@@ -138,23 +148,71 @@ export class UserService {
     )
   }
 
-  async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAllUsers(req: Request, res: Response, next:NextFunction): Promise<void> {
     const query: any = {};
     query.search = req.query.search as string;
 
     // Call the GetAllUsersUsecase to get all users
     const users: Either<ErrorClass, UserEntity[]> = await this.getAllUsersUsecase.execute(query);
-
+  
     users.cata(
       (error: ErrorClass) => res.status(error.status).json({ error: error.message }),
       (result: UserEntity[]) => {
-        // Filter out users with disabled set to "Deleted"
-        const nonDeletedUsers = result.filter((user) => user.disabled !== true);
-
-        // Convert non-deleted users from an array of UserEntity to an array of plain JSON objects using UserMapper
-        const responseData = nonDeletedUsers.map((user) => UserMapper.toEntity(user));
+        // Filter out tables with del_status set to "Deleted"
+        const nonDeletedUser = result.filter((user) => user.disabled !== true);
+  
+        // Convert tables from an array of TableEntity to an array of plain JSON objects using TableMapper
+        const responseData = nonDeletedUser.map((User) => UserMapper.toEntity(User));
         return res.json(responseData);
+      }
+    )
+  }
+  
+  async loginUser(req: Request, res: Response): Promise<void> {
+    const { email, password } = req.body;
+
+    const userResult: Either<ErrorClass, any> =
+      await this.loginUserUsecase.execute(email, password);
+
+    userResult.cata(
+      (error: ErrorClass) => {
+        res.status(error.status).json({ error: error.message });
+      },
+      async (user: any) => {
+        // const isMatch = await user.matchPassword(password); // You should define the matchPassword method in UserEntity
+        const isMatch = await user.password;
+        console.log("isMatch--->", isMatch);
+        
+        if (!isMatch) {
+          const err = ApiError.forbidden();
+          return res.status(err.status).json(err.message);
+        }
+
+        const token = await user.generateToken();
+        console.log("token--->", token);
+        const options = {
+          expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+          httpOnly: true,
+        };
+        console.log("options--->", options);
+
+        const resData = { user: UserMapper.toEntity(user, true) };
+        console.log("resData--->", resData);
+        res.cookie("token", token, options).json(resData);
       }
     );
   }
+
+  async logoutUser(req: Request, res: Response): Promise<void> {
+
+    console.log("token");
+    // await this.logoutUserUsecase.execute();
+    // Clear the token from the cookies
+    res.clearCookie("token");
+    
+    
+    // Send a success response indicating the user has been logged out
+    res.status(200).json({ message: "User logged out successfully" });
+}
+  
 }

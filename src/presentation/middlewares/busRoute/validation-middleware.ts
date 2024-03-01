@@ -11,6 +11,7 @@ interface BusRouteInput {
   estimatedDuration?: Date;
   price: number;
   routeStatus: 'Active' | 'Inactive'
+  currentLocation: string;
   disabled?: boolean;
 }
 
@@ -69,6 +70,7 @@ const busRouteValidator = (
       "any.only": "Route status must be either 'Active' or 'Inactive'",
       "any.required": "Route status is required",
     }),
+    currentLocation: Joi.string().optional().trim(),
     disabled: Joi.boolean().optional(),
   });
 
